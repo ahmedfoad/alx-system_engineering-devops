@@ -1,43 +1,48 @@
-# 0x1A Application server :wrench:
+# Application server
 
-> Using a shell script is most useful for repetitive tasks that may be time consuming to execute by typing one line at a time. A few examples of applications shell scripts can be used for include: Automating the code compiling process. Running a program or creating a program environment. This project covers deploying the application server in  real environemnt.
+This was the application deployment project for our AirBnB clone. In this
+project, I configured Nginx on the web servers provided me by ALX
+to serve a WSGI Flask app running through Gunicorn. Additionally, I set up an
+Upstart script to keep the application running on server reboots.
 
-At the end of this project, I was able to solve these questions:
+## Tasks :page_with_curl:
 
-Your web infrastructure is already serving web pages via Nginx that you installed in your first web stack project. While a web server can also serve dynamic content, this task is usually given to an application server. In this project you will add this piece to your infrastructure, plug it to your Nginx and make is serve your Airbnb clone project.
+* **0. Set up development with Python**
+  * In this task, I configured the file `web_flask/0-hello_route.py` from my
+  [AirBnB_clone_v2](https://github.com/aysuarex/AirBnB_clone_v2) to serve content
+  on the route `/airbnb-onepage/`, running on port `5000`.
 
+* **1. Set up production with Gunicorn**
+  * This task involved setting up a production environment, installing and configuring
+  Gunicorn to serve the same file from task 0.
 
-## Tasks :heavy_check_mark:
+* **2. Serve a page with Nginx**
+  * [2-app_server-nginx_config](./2-app_server-nginx_config): Nginx configuration file
+  proxying requests on the route `/airbnb-onepage/` to the Gunicorn app running on
+  port `5000`.
 
-0. Nginx config file to serve a page from the route /airbnb-onepage/
-1. Nginx config file by adding another service for Gunicorn to handle. In AirBnB_clone_v2/web_flask/6-number_odd_or_even, the route /number_odd_or_even/<int:n>
-2. Nginx config file must serve a page both locally and on its public IP on port 80
+* **3. Add a route with query parameters**
+  * [3-app_server-nginx_config](./3-app_server-nginx_config): Nginx configuration file
+  proxying requests on the route `/airbnb-dynamic/number_odd_or_even/<int: num>` to the
+  Gunicorn app running on port `5000`.
 
+* **4. Let's do this for your API**
+  * In this task, I configured the API from my [AirBnB_clone_v3](https://github.com/Tijani1402/AirBnB_clone_v31) to run on Gunicorn.
+  * [4-app_server-nginx_config](./4-app_server-nginx_config): Nginx configuration file
+  that proxies requests on the AirBnB API to the corresponding Gunicorn app.
 
-## Results :chart_with_upwards_trend:
+* **5. Serve your AirBnB clone**
+  * In this task, I configured the complete AirBnB app from [AirBnB_clone_v4](https://github.com/aysuarex/AirBnB_clone_v4) to run on Gunicorn and be served through Nginx.
+  * [5-app_server-nginx_config](./5-app_server-nginx_config): Nginx configuration file
+  configured to serve the static assets from `web_dynamic/static/` on the Gunicorn AirBnB
+  app.
 
-| Filename |
-| ------ |
-| [2-app_server-nginx_config](https://github.com/edward0rtiz/holberton-system_engineering-devops/blob/master/0x1A-application_server/2-app_server-nginx_config)|
-| [3-app_server-nginx_config](https://github.com/edward0rtiz/holberton-system_engineering-devops/blob/master/0x1A-application_server/3-app_server-nginx_config)|
-| [4-app_server-nginx_config](https://github.com/edward0rtiz/holberton-system_engineering-devops/blob/master/0x1A-application_server/4-app_server-nginx_config)|
-| [5-app_server-nginx_config](https://github.com/edward0rtiz/holberton-system_engineering-devops/blob/master/0x1A-application_server/5-app_server-nginx_config)|
+* **6. Deploy it**
+  * [gunicorn.conf](./gunicorn.conf): Configuration file for an Upstart script that starts a
+  Gunicorn process bounded to port 5003 that serves the content from task 5.
+  * The Gunicorn process spawns three worker processes and logs errors to `/tmp/airbnb-error.log`,
+  access to `/tmp/airbnb-access.log`.
 
-
-## Additional info :construction:
-### Resources
-
-- emacs
-- BASH
-- Debian 9 stable / Ubuntu 16.04 / Ubuntu 18.04 
-- Shellcheck
-- Gunicorn
-- Nginx
-
-
-### Try It On Your Machine :computer:
-```bash
-git clone https://github.com/edward0rtiz/holberton-system_engineering-devops.git
-NO TESTS FOR THIS PROJECT :)
-
-```
+* **7. No service interruption**
+  * [4-reload_gunicorn_no_downtime](./4-reload_gunicorn_no_downtime): Bash script that gracefully
+  reloads Gunicorn.
